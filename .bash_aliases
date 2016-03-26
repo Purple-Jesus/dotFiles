@@ -18,3 +18,7 @@ alias rt='zathura ~/Documents/aktuelles_Semester/RT/Vollständiges\ Skript\ RT.p
 alias itsec='zathura -P -1 ~/Documents/tex/ITSecurity/itsec.pdf&'
 alias itforensik2='zathura -P -1 ~/Documents/tex/itforensik.pdf&'
 alias itforensik='zathura ~/Documents/aktuelles_Semester/ITForensik/WS14_Digitale_Forensik_all.pdf&'
+
+alias youtubeogg='youtube-dl -x -f "webm"'
+
+alias rst2html='rst2html --stylesheet=html/voidspace.css'

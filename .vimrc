@@ -5,6 +5,8 @@ set autoindent
 set smarttab
 set tabstop=4
 set shiftwidth=4
+set textwidth=110
+
 " set term=ansi
 syntax on
 " acitivate mouse 
@@ -104,14 +106,14 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 """""""""""""""""""""""""
 " Airlineconfiguration
 """""""""""""""""""""""""
-let g:airline_powerline_fonts=1
+let g:airline_powerline_fonts=0
 let g:airline#extensions#tabline#enabled = 1
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
 	let g:airline_symbols.space = "\ua0"
 
-let g:airline_theme="jellybeans"
+let g:airline_theme="murmur"
 "function! AirlineInit()
 "	let g:airline_section_a = airline#section#create(['mode',' ','branch'])
 "	let g:airline_section_b = airline#section#create_left(['ffenc','hunks','%f'])
