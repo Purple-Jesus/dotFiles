@@ -1,0 +1,12 @@
+[user]
+	email = felix.fischer@hs-augsburg.de
+	name = MisterHyde
+[push]
+	default = simple
+[color]
+	ui = auto
+[alias] 
+	last = log -1 HEAD
+	co = checkout
+[credential]
+	helper = cache
