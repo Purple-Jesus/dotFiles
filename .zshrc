@@ -3702,6 +3702,9 @@ if [[ -f ~/.bash_aliases ]]; then
     source ~/.bash_aliases
 fi
 
+PATH="$PATH:/home/felix/.bin"
+export PATH
+
 ## genrefcard.pl settings
 
 ### doc strings for external functions from files

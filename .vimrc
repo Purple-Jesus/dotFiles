@@ -32,8 +32,6 @@ map <leader>sn ]s
 map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
-" Tagbar
-nmap <F8> :TagbarToggle<CR>
 " Window Navigation
 nmap <silent> <A-Up> :wincmd k<CR>
 nmap <silent> <A-Down> :wincmd j<CR>
@@ -64,7 +62,7 @@ Plugin 'scrooloose/nerdtree'
 "Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-airline/vim-airline'
 "Plugin 'vim-airline/vim-bufferline'
-Plugin 'vim-airline/vim-airline-themes'
+"Plugin 'vim-airline/vim-airline-themes'
 Plugin 'powerline/fonts'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'nvie/vim-rst-tables.git'
@@ -78,9 +76,15 @@ Plugin 'scrooloose/syntastic.git'
 " Search and display information from arbitrary sources like files
 Plugin 'Shougo/unite.vim'
 " Another status line plugin 
-Plugin 'itchyny/lightline.vim'
+"Plugin 'itchyny/lightline.vim'
 " Full path fuzzy file finder
 Plugin 'ctrlpvim/ctrlp.vim'
+" Plugin to provide a better ctag for php files
+"Plugin 'vim-php/phpctags'
+"Plugin 'vim-php/tagbar-phpctags.vim'
+Plugin 'vim-scripts/DoxygenToolkit.vim'
+" Git rapper
+Plugin 'tpope/vim-fugitive'
 " ...
 call vundle#end()
 
@@ -92,6 +96,12 @@ filetype on                         " Filetype-Erkennung aktivieren
 filetype indent on                  " Syntax-Einrückungen je nach Filetype
 filetype plugin on                  " Filetype-Plugins erlauben
 colorscheme jellybeans
+
+"""""""""""""""""""""""""""
+" Tagbar and phpctags
+"""""""""""""""""""""""""""
+nmap <F8> :TagbarToggle<CR>
+let g:tagbar_phpctags_bin='/home/felix/.vim/bundle/phpctags/bin/phpctags'
 
 
 """"""""""""""""""""""""""
@@ -113,7 +123,13 @@ if !exists('g:airline_symbols')
 endif
 	let g:airline_symbols.space = "\ua0"
 
-let g:airline_theme="murmur"
+if exists(':AirlineTheme') " check if the plugin is loaded
+	:AirlineTheme murmur
+else
+	let g:airline_theme = 'murmur'
+endif
+
+"let g:airline_theme="murmur"
 "function! AirlineInit()
 "	let g:airline_section_a = airline#section#create(['mode',' ','branch'])
 "	let g:airline_section_b = airline#section#create_left(['ffenc','hunks','%f'])
