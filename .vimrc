@@ -6,6 +6,7 @@ set smarttab
 set tabstop=4
 set shiftwidth=4
 set textwidth=110
+let mapleader=","
 
 " set term=ansi
 syntax on
@@ -32,6 +33,8 @@ map <leader>sn ]s
 map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
+" Tagbar
+nmap <F8> :TagbarToggle<CR>
 " Window Navigation
 nmap <silent> <A-Up> :wincmd k<CR>
 nmap <silent> <A-Down> :wincmd j<CR>
@@ -62,7 +65,7 @@ Plugin 'scrooloose/nerdtree'
 "Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-airline/vim-airline'
 "Plugin 'vim-airline/vim-bufferline'
-"Plugin 'vim-airline/vim-airline-themes'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'powerline/fonts'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'nvie/vim-rst-tables.git'
@@ -79,13 +82,77 @@ Plugin 'Shougo/unite.vim'
 "Plugin 'itchyny/lightline.vim'
 " Full path fuzzy file finder
 Plugin 'ctrlpvim/ctrlp.vim'
-" Plugin to provide a better ctag for php files
-"Plugin 'vim-php/phpctags'
-"Plugin 'vim-php/tagbar-phpctags.vim'
-Plugin 'vim-scripts/DoxygenToolkit.vim'
-" Git rapper
-Plugin 'tpope/vim-fugitive'
-" ...
+" Git in vim 
+Bundle 'tpope/vim-fugitive'
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Surrond stuff with things. ysiw" surrounds a word with quotes
+" cs"' changes " to '
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-surround'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Lets you use . to repeat some things like vim-surround
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-repeat'
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tab to indent or autocomplete depending on context
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'ervandew/supertab'
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Improved javascript indentation
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ Bundle 'pangloss/vim-javascript'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim Git runtime files
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-git'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim runtime files for Haml, Sass, and SCSS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-haml'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim Markdown runtime files
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-markdown'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim handlebars runtime files
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'nono/vim-handlebars'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Syntax for jquery keywords and selectors
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'itspriddle/vim-jquery'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim syntax for jst files
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'jeyb/vim-jst'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Syntax for nginx
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'mutewinter/nginx.vim'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Makes css colors show up as their actual colors, works better with CSApprox
+" or macvim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'ap/vim-css-color'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" My favorite dark color scheme
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'mrtazz/molokai.vim'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Decent light color scheme
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'nelstrom/vim-mac-classic-theme'
 call vundle#end()
 
 
@@ -96,12 +163,6 @@ filetype on                         " Filetype-Erkennung aktivieren
 filetype indent on                  " Syntax-Einrückungen je nach Filetype
 filetype plugin on                  " Filetype-Plugins erlauben
 colorscheme jellybeans
-
-"""""""""""""""""""""""""""
-" Tagbar and phpctags
-"""""""""""""""""""""""""""
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_phpctags_bin='/home/felix/.vim/bundle/phpctags/bin/phpctags'
 
 
 """"""""""""""""""""""""""
@@ -123,13 +184,7 @@ if !exists('g:airline_symbols')
 endif
 	let g:airline_symbols.space = "\ua0"
 
-if exists(':AirlineTheme') " check if the plugin is loaded
-	:AirlineTheme murmur
-else
-	let g:airline_theme = 'murmur'
-endif
-
-"let g:airline_theme="murmur"
+let g:airline_theme="murmur"
 "function! AirlineInit()
 "	let g:airline_section_a = airline#section#create(['mode',' ','branch'])
 "	let g:airline_section_b = airline#section#create_left(['ffenc','hunks','%f'])
@@ -145,6 +200,9 @@ endif
 """""""""""""""""""""""""""
 " Configure Syntastic
 """""""""""""""""""""""""""
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -168,3 +226,83 @@ let g:ycm_filetype_blacklist = {
       \ 'mail' : 1,
 	  \ 'rst' : 1
       \}
+
+""""""""""""""""""""""""""
+" Navigate tmux and vim
+""""""""""""""""""""""""""
+if exists('$TMUX')
+	function! TmuxOrSplitSwitch(wincmd, tmuxdir)
+		let previous_winnr = winnr()
+		silent! execute "wincmd " . a:wincmd
+		if previous_winnr == winnr()
+			call system("tmux select-pane -" . a:tmuxdir)
+			redraw!
+		endif
+	endfunction
+
+	let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
+	let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
+	let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
+
+	nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
+	nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
+	nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
+	nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
+else
+	map <C-h> <C-w>h
+	map <C-j> <C-w>j
+	map <C-k> <C-w>k
+	map <C-l> <C-w>l
+endif
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ARROW KEYS ARE UNACCEPTABLE
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <Left> :echo "no!"<cr>
+map <Right> :echo "no!"<cr>
+map <Up> :echo "no!"<cr>
+map <Down> :echo "no!"<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" tmux stuff
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"if has('mouse')
+"set mouse=a
+     "if &term =~ "xterm" || &term =~ "screen"
+		"" for some reason, doing this directly with 'set ttymouse=xterm2'
+		"" doesn't work -- 'set ttymouse?' returns xterm2 but the mouse
+		"" makes tmux enter copy mode instead of selecting or scrolling
+		"" inside Vim -- but luckily, setting it up from within autocmds
+		"" works
+		"autocmd VimEnter * set ttymouse=xterm2
+		"autocmd FocusGained * set ttymouse=xterm2
+		"autocmd BufEnter * set ttymouse=xterm2
+	"endif
+"endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Copy paste system clipboard
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>y "*y
+map <leader>p "*p
+map <leader>P "*P
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Quit help easily
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! QuitWithQ()
+   if &buftype == 'help'
+       nnoremap <buffer> <silent> q :q<cr>
+   endif
+endfunction
+autocmd FileType help exe QuitWithQ()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Persistent undo
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set undofile
+set undodir=$HOME/.vim/undo
+set undolevels=1000
+set undoreload=10000
