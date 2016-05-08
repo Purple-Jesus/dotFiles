@@ -7,6 +7,8 @@ set tabstop=4
 set shiftwidth=4
 set textwidth=110
 let mapleader=","
+" Activate/Deactivate the paste modus of vim
+set pastetoggle=<F5>
 
 " set term=ansi
 syntax on
