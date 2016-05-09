@@ -256,6 +256,8 @@ class MyAmazonApi
 	// It seems that the ebay API works with xml attributes which are not recognized by my code
 	function ebayOrderToWaWi($order)
 	{
+		// Überprüfen, ob $order["OrderID"] schon bearbeitet wurde
+
 		// Bestellung ist bezahlt, wenn OrderArray.Order.CheckoutStatus.Status = Complete
 		$warenkorb = array();
 
@@ -274,7 +276,7 @@ class MyAmazonApi
 			// Unterscheidung ob Abweichende Lieferadresse existiert
 			if($details["ShipToAddress"]["AddressUsage"] == "DefaultShipping"){
 				$ort = $details["ShipToAddress"]["CityName"];
-				$land = $details["ShipToAddress"]["Country"]; // Two-digits else use /["CountryName"]
+				$land = $details["ShipToAddress"]["Country"]; // Two-digits else use ["CountryName"]
 				$name = $details["ShipToAddress"]["Name"];
 				$plz = $details["ShipToAddress"]["PostalCode"];
 				$referenceId = $details["ShipToAddress"]["ReferenceID"]; // Ebay sagt die muss auf Paketen immer über der Adresse stehen
@@ -292,10 +294,10 @@ class MyAmazonApi
 
 		$versandkostenN = $order["ShippingServiceDetails"]["TotalShippingCost"];
 		//$lieferung = $order["ShippingServiceDetails"]["ShippingService"];
-		$lieferung = $order["ShippingServiceSelected"]["ShippingService"];
+		//$lieferung = $order["ShippingServiceSelected"]["ShippingService"];
 		$versandkostenN = $order["ShippingServiceSelected"]["ShippingServiceCost"];
 		// Unterscheidung ob Abweichende Lieferadresse existiert
-		if($order["ShippingAddress"]["AddressUsage"] == "DefaultShipping"){
+		if(($order["ShippingAddress"]["AddressUsage"] == "DefaultShipping") || empty($order["ShippingAddress"]["AddressUsage"]){
 			$ort = $order["ShippingAddress"]["CityName"];
 			$land = $order["ShippingAddress"]["Country"]; // Two-digits else use /["CountryName"]
 			$name = $order["ShippingAddress"]["Name"];
@@ -312,14 +314,16 @@ class MyAmazonApi
 			$liefer_strasse = $order["ShippingAddress"]["Street1"] . $order["ShipToAddress"]["Street2"];
 		}
 
-		// Mehrere Angaben zum Verschiffen
-		$shipment = array();
-		if(!empty($order["ShippingDetails"]["ShipmentTrackingDetails"][0])){
-			$shipment = $order["ShippingDetails"]["ShipmentTrackingDetails"];
-		}
-		else{
-			$shipment = $order["ShippingDetails"]["ShipmentTrackingDetails"][0];
-		}
+		$lieferung = $order["ShippingDetails"]["ShippingServiceOptions"]["ShippingService"];
+
+		//// Mehrere Angaben zum Verschiffen
+		//$shipment = array();
+		//if(!empty($order["ShippingDetails"]["ShipmentTrackingDetails"][0])){
+			//$shipment = $order["ShippingDetails"]["ShipmentTrackingDetails"];
+		//}
+		//else{
+			//$shipment = $order["ShippingDetails"]["ShipmentTrackingDetails"][0];
+		//}
 
 		//$gesamtsumme = $order["AmountPaid"];
 		$gesamtsumme = $order["Total"];
@@ -327,7 +331,7 @@ class MyAmazonApi
 			
 
 		$warenkorb['name'] = $name;
-		$warenkorb['email'] = $this->checkIsArray($order["TransactionArray"]["Transaction"])["Buyer"]["Email"];
+		$warenkorb['email'] = $this->isAssociativeArray($order["TransactionArray"]["Transaction"])["Buyer"]["Email"];
 		$warenkorb['anrede'] = "";
 		$warenkorb['ansprechpartner'] = "";
 		$warenkorb['abteilung'] = "";
@@ -348,16 +352,16 @@ class MyAmazonApi
 		$warenkorb['lieferung'] = $lieferung; // Versandunternehmen
 		$warenkorb2 = array();
 		if(False/* Abweichende Lieferadresse*/){
-			$warenkorb2['lieferadresse_name'] = "";
+			$warenkorb2['lieferadresse_name'] = $liefer_name;
 			$warenkorb2['lieferadresse_ansprechpartner'] = "";
-			$warenkorb2['lieferadresse_strasse'] = "";
-			$warenkorb2['lieferadresse_plz'] = "";
-			$warenkorb2['lieferadresse_ort'] = "";
-			$warenkorb2['lieferadresse_land'] = "";
+			$warenkorb2['lieferadresse_strasse'] = $liefer_strasse;
+			$warenkorb2['lieferadresse_plz'] = $liefer_plz;
+			$warenkorb2['lieferadresse_ort'] = $liefer_ort;
+			$warenkorb2['lieferadresse_land'] = $liefer_land;
 			$warenkorb2['lieferadresse_abteilung'] = "";
 		}
 
-		$item = $this->checkIsArray($order["TransactionArray"]["Transaction"])["Item"];
+		$item = $this->isAssociativeArray($order["TransactionArray"]["Transaction"])["Item"];
 
 		$articleArray = array();
 		foreach($order["TransactionArray"]["Transaction"] as $transaction){
@@ -375,7 +379,7 @@ class MyAmazonApi
 		return $warenkorb;
 	}
 
-	private function checkIsArray($whyNot)
+	private function isAssociativeArray($whyNot)
 	{
 		if(empty($whyNot[0])){
 			return $whyNot;
