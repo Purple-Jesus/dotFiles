@@ -2,7 +2,12 @@
 
 $amazon = new MyAmazonApi();
 
-$orders = $amazon->getOrders(1,2);
+//$orders = $amazon->getOrders(1,2);
+//print_r($orders);
+
+$ebay = json_decode(json_encode(simplexml_load_file("src/GetOrdersResponse2.xml")), True);
+print_r($ebay);
+$orders = $amazon->ebayOrderToWaWi($ebay["OrderArray"]["Order"]);
 print_r($orders);
 
 class MyAmazonApi
@@ -172,7 +177,7 @@ class MyAmazonApi
 		return json_decode($json, True);
 	}
 
-	function amazonOrderToWaWi($order, $orderItems)
+	function amazonOrderToWaWi(&$order, &$orderItems)
 	{
 		// Es ist möglich dass mehrere Payments angegeben sind
 		//print_r($order);
@@ -251,32 +256,96 @@ class MyAmazonApi
 	// It seems that the ebay API works with xml attributes which are not recognized by my code
 	function ebayOrderToWaWi($order)
 	{
+		// Bestellung ist bezahlt, wenn OrderArray.Order.CheckoutStatus.Status = Complete
 		$warenkorb = array();
 
 		// Array zum mappen der Zahlungsweise
 		$zahlungsweise = array('bar', 'rechnung', 'vorkasse', 'kreditkarte', 'lastschrift', 'paypal',
 			'nachnahme', 'Amazoncba', 'sofortueberweisung', 'secupay', 'billsafe', 'unbekannt');
 
-		$warenkorb['name'] = $order[""];
-		$warenkorb['email'] = $order[""];
+		// Fee ist positiv und Credit negative
+		$feeOrCredit = $order["ExternalTransaction"]["FeeOrCreditAmount"];
+
+		// Wenn MultiLegShipping gesetzt ist dann lese hierraus die Zahlungs- und Lieferdetails
+		if($order["MultiLegShipping"] == "true"){
+			$details = $order["MultiLegShippingDetials"]["SellerShipmentToLogisticsProvider"];
+			$versandkostenN = $details["ShippingServiceDetails"]["TotalShippingCost"];
+			$lieferung = $details["ShippingServiceDetails"]["ShippingService"];
+			// Unterscheidung ob Abweichende Lieferadresse existiert
+			if($details["ShipToAddress"]["AddressUsage"] == "DefaultShipping"){
+				$ort = $details["ShipToAddress"]["CityName"];
+				$land = $details["ShipToAddress"]["Country"]; // Two-digits else use /["CountryName"]
+				$name = $details["ShipToAddress"]["Name"];
+				$plz = $details["ShipToAddress"]["PostalCode"];
+				$referenceId = $details["ShipToAddress"]["ReferenceID"]; // Ebay sagt die muss auf Paketen immer über der Adresse stehen
+				$strasse = $details["ShipToAddress"]["Street1"] . $details["ShipToAddress"]["Street2"];
+			}
+			else if($details["ShipToAddress"]["AddressUsage"] == "Shipping"){
+				$liefer_ort = $details["ShipToAddress"]["CityName"];
+				$liefer_land = $details["ShipToAddress"]["Country"]; // Two-digits else use /["CountryName"]
+				$liefer_name = $details["ShipToAddress"]["Name"];
+				$liefer_plz = $details["ShipToAddress"]["PostalCode"];
+				$liefer_referenceId = $details["ShipToAddress"]["ReferenceID"];
+				$liefer_strasse = $details["ShipToAddress"]["Street1"] . $details["ShipToAddress"]["Street2"];
+			}
+		}
+
+		$versandkostenN = $order["ShippingServiceDetails"]["TotalShippingCost"];
+		//$lieferung = $order["ShippingServiceDetails"]["ShippingService"];
+		$lieferung = $order["ShippingServiceSelected"]["ShippingService"];
+		$versandkostenN = $order["ShippingServiceSelected"]["ShippingServiceCost"];
+		// Unterscheidung ob Abweichende Lieferadresse existiert
+		if($order["ShippingAddress"]["AddressUsage"] == "DefaultShipping"){
+			$ort = $order["ShippingAddress"]["CityName"];
+			$land = $order["ShippingAddress"]["Country"]; // Two-digits else use /["CountryName"]
+			$name = $order["ShippingAddress"]["Name"];
+			$plz = $order["ShippingAddress"]["PostalCode"];
+			$referenceId = $order["ShippingAddress"]["ReferenceID"]; // Ebay sagt die muss auf Paketen immer über der Adresse stehen
+			$strasse = $order["ShippingAddress"]["Street1"] . $order["ShipToAddress"]["Street2"];
+		}
+		else{
+			$liefer_ort = $order["ShippingAddress"]["CityName"];
+			$liefer_land = $order["ShippingAddress"]["Country"]; // Two-digits else use /["CountryName"]
+			$liefer_name = $order["ShippingAddress"]["Name"];
+			$liefer_plz = $order["ShippingAddress"]["PostalCode"];
+			$liefer_referenceId = $order["ShippingAddress"]["ReferenceID"];
+			$liefer_strasse = $order["ShippingAddress"]["Street1"] . $order["ShipToAddress"]["Street2"];
+		}
+
+		// Mehrere Angaben zum Verschiffen
+		$shipment = array();
+		if(!empty($order["ShippingDetails"]["ShipmentTrackingDetails"][0])){
+			$shipment = $order["ShippingDetails"]["ShipmentTrackingDetails"];
+		}
+		else{
+			$shipment = $order["ShippingDetails"]["ShipmentTrackingDetails"][0];
+		}
+
+		//$gesamtsumme = $order["AmountPaid"];
+		$gesamtsumme = $order["Total"];
+
+			
+
+		$warenkorb['name'] = $name;
+		$warenkorb['email'] = $this->checkIsArray($order["TransactionArray"]["Transaction"])["Buyer"]["Email"];
 		$warenkorb['anrede'] = "";
 		$warenkorb['ansprechpartner'] = "";
 		$warenkorb['abteilung'] = "";
-		$warenkorb['strasse'] = "";
-		$warenkorb['plz'] = "";
-		$warenkorb['ort'] = "";
-		$warenkorb['land'] = "";
+		$warenkorb['strasse'] = $strasse;
+		$warenkorb['plz'] = $plz;
+		$warenkorb['ort'] = $ort;
+		$warenkorb['land'] = $land;
 		$warenkorb['bestelldatum'] = $order["CheckoutStatus"]["LastModifiedTime"];
-		$warenkorb['gesamtsumme'] = $order["AmountPaid"]; // Endsumme die gezahlt wird
-		$warenkorb['transaktionsnummer'] = ""; // Paypal, iPayment oder Billsafe Nummer
+		$warenkorb['gesamtsumme'] = $gesamtsumme; // Endsumme die gezahlt wird
+		$warenkorb['transaktionsnummer'] = $order["ExternalTransaction"]["ExternalTransactionID"]; // Paypal, iPayment oder Billsafe Nummer
 		$warenkorb['onlinebestellnummer'] = ""; // Interne Shop-Bestellnummer
-		$warenkorb['versandkostennetto'] = "";
+		$warenkorb['versandkostennetto'] = $versandkostenN;
 		$warenkorb['versandkostenbrutto'] = "";
 		$warenkorb['freitext'] = ""; // Freitext auf Belegen wie Auftrag, Rechnung und Lieferschein
-		$warenkorb['steuerfrei'] = ""; // 0 wenn nicht steuerfrei; 1 wenn steuerfrei
+		$warenkorb['steuerfrei'] = 0; // 0 wenn nicht steuerfrei; 1 wenn steuerfrei
 		$warenkorb['vorabbezahltmarkieren'] = ""; // Falls kein Zahlungseingang von WaWision aus gemacht wird
 		$warenkorb['lieferdatum'] = ""; // Wunschlieferdatum des Kunden
-		$warenkorb['lieferung'] = ""; // Versandunternehmen
+		$warenkorb['lieferung'] = $lieferung; // Versandunternehmen
 		$warenkorb2 = array();
 		if(False/* Abweichende Lieferadresse*/){
 			$warenkorb2['lieferadresse_name'] = "";
@@ -288,16 +357,32 @@ class MyAmazonApi
 			$warenkorb2['lieferadresse_abteilung'] = "";
 		}
 
+		$item = $this->checkIsArray($order["TransactionArray"]["Transaction"])["Item"];
+
 		$articleArray = array();
-		//foreach( as )
-			//$articleArray[] = array(
-				//'articleid' => "",
-				//'name' => "",
-				//'price' => "", // Nettopreis des Artikels
-				//'quantity' => ""
-			//);
+		foreach($order["TransactionArray"]["Transaction"] as $transaction){
+			$articleArray[] = array(
+				//'articleid' => $transaction["Item"]["ItemID"], // Diese ID ist von eBay
+				'articleid' => $transaction["Item"]["SKU"], // Diese ID ist vom Verkäufer
+				'name' => $transaction["Item"]["Title"],
+				'price' => $transaction["TransactionPrice"], // Nettopreis des Artikels
+				'quantity' => $transaction["QuantityPurchased"]
+			);
+		}
 
 		$warenkorb['articlelist'] = $articleArray;
+
+		return $warenkorb;
+	}
+
+	private function checkIsArray($whyNot)
+	{
+		if(empty($whyNot[0])){
+			return $whyNot;
+		}
+		else{
+			return $whyNot[0];
+		}
 	}
 }
 
