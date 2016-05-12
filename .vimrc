@@ -72,6 +72,7 @@ Plugin 'powerline/fonts'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'nvie/vim-rst-tables.git'
 Plugin 'majutsushi/tagbar'
+Plugin 'vim-php/tagbar-phpctags.vim'
 " Syntax completion; needs external programms see homepage
 "Plugin 'Valloric/YouCompleteMe'
 Plugin 'rdnetto/YCM-Generator'
@@ -209,6 +210,12 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+"""""""""""""""""""""""""""
+" Configure tagbar-php
+"""""""""""""""""""""""""""
+let g:tagbar_phpctags_bin='~/.vim/bundle/tagbar-phpctags.vim/bin/phpctags'
+"let g:tagbar_phpctags_memory_limit = '512M'
 
 
 """""""""""""""""""""""""""
