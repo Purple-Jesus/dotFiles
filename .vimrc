@@ -6,9 +6,12 @@ set smarttab
 set tabstop=4
 set shiftwidth=4
 set textwidth=110
+"set foldmethod=syntax
+"set foldnestmax=1
 let mapleader=","
 " Activate/Deactivate the paste modus of vim
 set pastetoggle=<F5>
+map <leader>ff :%g/\(function\_.\{-}\)\@<={/ normal! f{zf%
 
 " set term=ansi
 syntax on
