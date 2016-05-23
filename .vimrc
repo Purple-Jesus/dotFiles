@@ -242,47 +242,47 @@ let g:ycm_filetype_blacklist = {
 """"""""""""""""""""""""""
 " Navigate tmux and vim
 """"""""""""""""""""""""""
-if exists('$TMUX')
-	function! TmuxOrSplitSwitch(wincmd, tmuxdir)
-		let previous_winnr = winnr()
-		silent! execute "wincmd " . a:wincmd
-		if previous_winnr == winnr()
-			call system("tmux select-pane -" . a:tmuxdir)
-			redraw!
-		endif
-	endfunction
+"if exists('$TMUX')
+	"function! TmuxOrSplitSwitch(wincmd, tmuxdir)
+		"let previous_winnr = winnr()
+		"silent! execute "wincmd " . a:wincmd
+		"if previous_winnr == winnr()
+			"call system("tmux select-pane -" . a:tmuxdir)
+			"redraw!
+		"endif
+	"endfunction
 
-	let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
-	let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
-	let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
+	"let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
+	"let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
+	"let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
 
-	nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
-	nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
-	nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
-	nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
-else
-	map <C-h> <C-w>h
-	map <C-j> <C-w>j
-	map <C-k> <C-w>k
-	map <C-l> <C-w>l
-endif
+	"nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
+	"nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
+	"nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
+	"nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
+"else
+	"map <C-h> <C-w>h
+	"map <C-j> <C-w>j
+	"map <C-k> <C-w>k
+	"map <C-l> <C-w>l
+"endif
 
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ARROW KEYS ARE UNACCEPTABLE
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <Left> :echo "no!"<cr>
-map <Right> :echo "no!"<cr>
-map <Up> :echo "no!"<cr>
-map <Down> :echo "no!"<cr>
+"map <Left> :echo "no!"<cr>
+"map <Right> :echo "no!"<cr>
+"map <Up> :echo "no!"<cr>
+"map <Down> :echo "no!"<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " tmux stuff
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "if has('mouse')
 "set mouse=a
-     "if &term =~ "xterm" || &term =~ "screen"
+	 "if &term =~ "xterm" || &term =~ "screen"
 		"" for some reason, doing this directly with 'set ttymouse=xterm2'
 		"" doesn't work -- 'set ttymouse?' returns xterm2 but the mouse
 		"" makes tmux enter copy mode instead of selecting or scrolling
