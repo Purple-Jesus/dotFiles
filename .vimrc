@@ -12,7 +12,8 @@ let mapleader=","
 " Activate/Deactivate the paste modus of vim
 set pastetoggle=<F5>
 map <leader>ff :%g/\(function\_.\{-}\)\@<={/ normal! f{zf%
-
+" search visual selected pattern
+vnoremap // y/<C-R>"<CR>
 " set term=ansi
 syntax on
 " acitivate mouse 
