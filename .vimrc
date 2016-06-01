@@ -46,6 +46,11 @@ nmap <silent> <A-Down> :wincmd j<CR>
 nmap <silent> <A-Left> :wincmd h<CR>
 nmap <silent> <A-Right> :wincmd l<CR>
 
+" If the file is a rst file then load the virtualenv in which vim_bridge is installed
+"autocmd BufRead *.rst VirtualEnvActivate pyvim
+
+" Toggle highlighting search results
+nnoremap <F6> :set hlsearch!<CR>
 
 """""""""""""""""""""""""""
 " configure vbundle
@@ -64,6 +69,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'vim-scripts/sudo.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets.git'
 Plugin 'jezcope/vim-align'
 Plugin 'scrooloose/nerdtree'
 "Plugin 'powerline/powerline'
@@ -160,6 +166,9 @@ Bundle 'mrtazz/molokai.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'nelstrom/vim-mac-classic-theme'
 call vundle#end()
+
+" Use virtualenvs in the embeded python interpreter
+Bundle 'jmcantrell/vim-virtualenv'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -318,3 +327,13 @@ set undofile
 set undodir=$HOME/.vim/undo
 set undolevels=1000
 set undoreload=10000
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ultisnips
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
