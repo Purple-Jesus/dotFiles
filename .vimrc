@@ -6,6 +6,7 @@ set smarttab
 set tabstop=4
 set shiftwidth=4
 set textwidth=110
+set hidden " Required for ctrlSpace
 "set foldmethod=syntax
 "set foldnestmax=1
 let mapleader=","
@@ -18,6 +19,9 @@ vnoremap // y/<C-R>"<CR>
 syntax on
 " acitivate mouse 
 set mouse=a
+if !has("nvim")
+    set ttymouse=xterm2
+endif
 "set selectmode+=mouse
 " Treat long lines as break lines (useful when moving around in them)
 map j gj
@@ -85,7 +89,7 @@ Plugin 'majutsushi/tagbar'
 Plugin 'vim-php/tagbar-phpctags.vim'
 " Syntax completion; needs external programms see homepage
 "Plugin 'Valloric/YouCompleteMe'
-Plugin 'rdnetto/YCM-Generator'
+"Plugin 'rdnetto/YCM-Generator'
 "Plugin 'altercation/vim-colors-solarized.git'
 " Syntax checking plugin
 Plugin 'scrooloose/syntastic.git'
@@ -97,6 +101,13 @@ Plugin 'Shougo/unite.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 " Git in vim 
 Bundle 'tpope/vim-fugitive'
+" Completion script
+Bundle 'Shougo/neocomplete.vim'
+" Spread nerdtree over all tabs
+"Bundle 'jistr/vim-nerdtree-tabs'
+" Controle your tabs
+Bundle 'vim-ctrlspace/vim-ctrlspace'
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Surrond stuff with things. ysiw" surrounds a word with quotes
 " cs"' changes " to '
@@ -181,15 +192,6 @@ filetype plugin on                  " Filetype-Plugins erlauben
 colorscheme jellybeans
 
 
-""""""""""""""""""""""""""
-" configure ultisnips
-""""""""""""""""""""""""""
-" Trigger configuration
-let g:UltiSnipsExpandTriger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-
 """""""""""""""""""""""""
 " Airlineconfiguration
 """""""""""""""""""""""""
@@ -231,23 +233,23 @@ let g:tagbar_phpctags_bin='~/.vim/bundle/tagbar-phpctags.vim/bin/phpctags'
 "let g:tagbar_phpctags_memory_limit = '512M'
 
 
-"""""""""""""""""""""""""""
-" Cofigure YouCompleteMe
-"""""""""""""""""""""""""""
-let g:ycm_filetype_whitelist = { '*': 1}
-let g:ycm_filetype_blacklist = {
-      \ 'tagbar' : 1,
-      \ 'qf' : 1,
-      \ 'notes' : 1,
-      \ 'markdown' : 1,
-      \ 'unite' : 1,
-      \ 'text' : 1,
-      \ 'vimwiki' : 1,
-      \ 'pandoc' : 1,
-      \ 'infolog' : 1,
-      \ 'mail' : 1,
-	  \ 'rst' : 1
-      \}
+""""""""""""""""""""""""""""
+"" Cofigure YouCompleteMe
+""""""""""""""""""""""""""""
+"let g:ycm_filetype_whitelist = { '*': 1}
+"let g:ycm_filetype_blacklist = {
+      "\ 'tagbar' : 1,
+      "\ 'qf' : 1,
+      "\ 'notes' : 1,
+      "\ 'markdown' : 1,
+      "\ 'unite' : 1,
+      "\ 'text' : 1,
+      "\ 'vimwiki' : 1,
+      "\ 'pandoc' : 1,
+      "\ 'infolog' : 1,
+      "\ 'mail' : 1,
+	  "\ 'rst' : 1
+      "\}
 
 """"""""""""""""""""""""""
 " Navigate tmux and vim
@@ -290,19 +292,19 @@ let g:ycm_filetype_blacklist = {
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " tmux stuff
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"if has('mouse')
-"set mouse=a
-	 "if &term =~ "xterm" || &term =~ "screen"
-		"" for some reason, doing this directly with 'set ttymouse=xterm2'
-		"" doesn't work -- 'set ttymouse?' returns xterm2 but the mouse
-		"" makes tmux enter copy mode instead of selecting or scrolling
-		"" inside Vim -- but luckily, setting it up from within autocmds
-		"" works
-		"autocmd VimEnter * set ttymouse=xterm2
-		"autocmd FocusGained * set ttymouse=xterm2
-		"autocmd BufEnter * set ttymouse=xterm2
-	"endif
-"endif
+if has('mouse')
+set mouse=a
+	 if &term =~ "xterm" || &term =~ "screen"
+		" for some reason, doing this directly with 'set ttymouse=xterm2'
+		" doesn't work -- 'set ttymouse?' returns xterm2 but the mouse
+		" makes tmux enter copy mode instead of selecting or scrolling
+		" inside Vim -- but luckily, setting it up from within autocmds
+		" works
+		autocmd VimEnter * set ttymouse=xterm2
+		autocmd FocusGained * set ttymouse=xterm2
+		autocmd BufEnter * set ttymouse=xterm2
+	endif
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Copy paste system clipboard
@@ -338,3 +340,84 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Neocomplete
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php setlocal omnifunc=pythoncomplete#Complete
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
+"""""""""""""""""""""""""""""""""""
+" ctrlspace
+"""""""""""""""""""""""""""""""""""
+
