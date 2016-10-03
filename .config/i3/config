@@ -45,7 +45,7 @@ bindsym $mod+Return exec dmenu_run
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-bindsym $mod+l focus up
+#bindsym $mod+l focus up
 bindsym $mod+odiaeresis focus right
 
 # alternatively, you can use the cursor keys:
@@ -174,6 +174,7 @@ bindsym XF86AudioRaiseVolume exec amixer set Master 2%+ unmute
 bindsym XF86AudioLowerVolume exec amixer set Master 2%- unmute
 bindsym XF86AudioMute exec amixer set Master toggle
 bindsym XF86TouchpadToggle exec /usr/local/bin/touchpad.sh 
+bindsym $mod+l exec i3lock -i /usr/share/images/darksouls.png -p default -d
 
 ####### Rules for specific applications ##########
 # To get the an application wm-name run xprop
@@ -187,3 +188,7 @@ for_window [class="Sakura"] border none
 for_window [class="Soffice"] border none
 
 no_focus [class="pop-up"]
+
+# Start redshift with the coordinates for the region Augsburg
+#exec --no-startup-id "redshift -l 48.44111:10.94631"
+exec --no-startup-id "redshift"
