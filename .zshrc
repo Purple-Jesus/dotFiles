@@ -3702,9 +3702,6 @@ if [[ -f ~/.bash_aliases ]]; then
     source ~/.bash_aliases
 fi
 
-PATH="$PATH:/home/felix/.bin"
-export PATH
-
 ## genrefcard.pl settings
 
 ### doc strings for external functions from files
@@ -3719,7 +3716,11 @@ echo "    Ein verderbliches Dogma
     Nur nicht faul zur Faulheit sein.
                             Lessing"
 
-export TERM="xterm-256color"
+#export TERM="xterm-256color"
+#export PATH="/usr/lib/ccache/bin/:$PATH"
+export PATH="$PATH:/home/felix/.bin"
+# Little bockmarks for bash script from https://github.com/huyng/bashmarks
+source ~/.local/bin/bashmarks.sh
 
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4

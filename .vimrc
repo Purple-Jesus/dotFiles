@@ -56,6 +56,8 @@ nmap <silent> <A-Right> :wincmd l<CR>
 
 " Toggle highlighting search results
 nnoremap <F6> :set hlsearch!<CR>
+nnoremap <F9> :set mouse=r<CR>
+nnoremap <F10> :set mouse=a<CR>
 
 """""""""""""""""""""""""""
 " configure vbundle
