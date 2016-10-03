@@ -1,0 +1,87 @@
+background yes
+use_xft yes
+xftfont Bitstream Vera Sans Mono:size=9
+xftalpha 0.8
+update_interval 1.0
+total_run_times 0
+own_window yes
+own_window_type desktop
+own_window_transparent yes
+own_window_colour black
+own_window_hints undecorated,skip_pager,skip_taskbar
+double_buffer yes
+minimum_size 200 5
+#maximum_width 280 
+#max_text_width 280
+draw_shades no
+draw_outline no
+draw_borders yes
+draw_graph_borders yes
+stippled_borders 0
+border_margin 4
+border_width 0
+default_color white
+default_shade_color black
+default_outline_color black
+alignment top_right
+gap_x 10
+gap_y 35
+no_buffers yes
+uppercase no
+cpu_avg_samples 1
+net_avg_samples 1
+override_utf8_locale yes
+use_spacer yes
+
+TEXT
+${font Verdana:style=Bold:size=12}${color #ffffff}${alignc}${time %a %d. %b %Y %k:%M}
+${font}${color}Hostname: $nodename
+${font}${color}Kernel:   $kernel
+${font}${color}Uptime:   $uptime
+
+#${font}${color}Battery ${hr}
+#${font}${color}Capacity: ${battery_bar BAT1}
+#${font}${color}Status:   ${battery BAT1}
+#${font}${color}Capacity: ${battery_bar BAT0}
+#${font}${color}Status:   ${battery BAT0}
+#${font}${color}Timeleft: ${battery_time BAT1}
+
+${font}${color}Fan & Temperature ${hr}
+#${font}${color}Fan speed:   ${acpifan}
+${font}${color}Temperature: ${acpitemp}°C
+
+${font}${color}CPU ${hr}
+${font}${color}Processes: $processes    Running: $running_processes
+${font}${color}CPU Usage: $cpu% ${cpubar}
+${cpugraph 48,312 ffffff ffffff}
+${font Monospace:size=8}${color}Name                   PID    CPU%    MEM%
+${font Monospace:size=8}${color}${top name 1}     ${top pid 1}  ${top cpu 1}  ${top mem 1}
+${font Monospace:size=8}${color}${top name 2}     ${top pid 2}  ${top cpu 2}  ${top mem 2}
+${font Monospace:size=8}${color}${top name 3}     ${top pid 3}  ${top cpu 3}  ${top mem 3}
+${font Monospace:size=8}${color}${top name 4}     ${top pid 4}  ${top cpu 4}  ${top mem 4}
+${font Monospace:size=8}${color}${top name 5}     ${top pid 5}  ${top cpu 5}  ${top mem 5}
+
+${font}${color}Memory ${hr}
+${font}${color}RAM:  $mem / $memmax - $memperc% ${membar}
+${font}${color}Swap: $swap / $swapmax - $swapperc% ${swapbar}
+
+${font Monospace:size=8}${color}Name                   PID    CPU%    MEM%
+${font Monospace:size=8}${color}${top_mem name 1}     ${top_mem pid 1}  ${top_mem cpu 1}  ${top_mem mem 1}
+${font Monospace:size=8}${color}${top_mem name 2}     ${top_mem pid 2}  ${top_mem cpu 2}  ${top_mem mem 2}
+${font Monospace:size=8}${color}${top_mem name 3}     ${top_mem pid 3}  ${top_mem cpu 3}  ${top_mem mem 3}
+
+${font}${color}Disk Usage ${hr}
+${font}${color}root: ${fs_used /} / ${fs_size /} ${fs_bar /}
+${font}${color}home: ${fs_used /home} / ${fs_size /home} ${fs_bar /home}
+${font}${color}var: ${fs_used /var} / ${fs_size /var} ${fs_bar /var}
+
+${font}${color}Connections ${hr}
+${font}${color}In: ${tcp_portmon 1 32767 count}    Out: ${tcp_portmon 32768 61000 count}    ALL: ${tcp_portmon 1 65535 count}
+#${font}${color}wlan0: ${addr wlan0}
+#${font}${color}Down: ${downspeedf wlan0}KB/s${offset 45}Up: ${upspeedf wlan0}KB/s
+#${downspeedgraph wlan0 32,140 ffffff ffffff} ${offset 18} ${upspeedgraph wlan0 32,140 ffffff ffffff}
+
+${font}${color}enp7s0: ${addr enp7s0}
+${font}${color}Down: ${downspeedf enp7s0}KB/s${offset 45}Up: ${upspeedf enp7s0}KB/s
+${font}${color}Total Down: ${totaldown enp7s0}${offset 45}Total Up: ${totalup enp7s0}
+${downspeedgraph eth0 32,140 ffffff ffffff} ${offset 18} ${upspeedgraph eth0 32,140 ffffff ffffff}

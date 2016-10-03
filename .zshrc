@@ -3719,10 +3719,13 @@ echo "    Ein verderbliches Dogma
     Nur nicht faul zur Faulheit sein.
                             Lessing"
 
-#export PATH="/usr/lib/ccache/bin/:$PATH"
+export TERM="xterm-256color"
 
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
 # Local variables:
 # mode: sh
 # End:
+ 
+#eval "$(ntfy shell-integration)"
+#export AUTO_NTFY_DONE_IGNORE="vim screen meld"
