@@ -13,28 +13,51 @@ general {
 
 #order += "ipv6"
 order += "disk /"
+#order += "xrandr"
+order += "chkeymap"
 order += "run_watch DHCP"
 order += "run_watch VPN"
-order += "wireless _first_"
+#order += "wireless _first_"
 order += "ethernet _first_"
-order += "battery 0"
+#order += "battery 0"
 order += "load"
-#order += "volume master"
+order += "arch_updates"
+order += "volume_status"
 order += "tztime local"
 
 #volume master{
-#		format = "♪: %volume"
-#		format_muted = "♪: muted (%volume)"
-#		device = "default"
-#		mixer = "Master"
-#		mixer_idx = 0
+		#format = "♪: %volume"
+		#format_muted = "♪: muted (%volume)"
+		#device = "default"
+		#mixer = "Master"
+		#mixer_idx = 0
+		#button_up = 4
+		#button_down = 5
+		#button_mute = 2
 #}
 
-wireless _first_ {
-        format_up = "W: (%quality at %essid) %ip"
-        format_down = "W: down"
+chkeymap {
+	on_click 1 = "exec changeKeys"
+	format = "exec setxkbmap -print | grep xkb_symbols | awk '{print $4}' | awk -F\"+\" '{print $2}'"
 }
 
+xrandr {
+	force_on_start = "DVI0+HDMI0"
+	DVI0_pos = "left-of HDMI0"
+	DVI0_workspaces = "1,2"
+	HDMI0_workspaces = "3,4"
+}
+
+# Add mouse clicks to change volume
+volume_status {
+	button_up = 4
+	button_down = 5
+	button_mute = 2
+}
+arch_updates {
+	include_aur = true
+	format = "UPD:{pacman}/{aur}"
+}
 ethernet _first_ {
         # if you use %speed, i3status requires root privileges
         format_up = "E: %ip (%speed)"
@@ -63,4 +86,5 @@ load {
 
 disk "/" {
         format = "%avail"
+		on_click 1 = "exec pcmanfm /"
 }
