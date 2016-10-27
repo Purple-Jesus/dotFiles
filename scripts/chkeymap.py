@@ -36,3 +36,9 @@ class Py3status:
         format_string = "\u2691 {lang}" 
         self.full_text = self.py3.safe_format(format_string, data)
         
+if __name__ == "__main__":
+    """
+    Run module in test mode.
+    """
+    from py3status.module_test import module_test
+    module_test(Py3status)

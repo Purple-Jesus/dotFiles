@@ -167,9 +167,18 @@ bar {
 
 workspace_layout tabbed
 
-# Autostart section
+  ######################
+ # Autostart section  #
+######################
+# Start polkit x authentication agent
+exec --no-startup-id lxqt-policykit-agent
+# Disable console bell
 exec --no-startup-id xset b off
+# Set background
 exec --no-startup-id ./.fehbg
+# Start redshift with the coordinates for the region Augsburg
+#exec --no-startup-id "redshift -l 48.44111:10.94631"
+exec --no-startup-id "redshift"
 
 #bindsym XF86AudioRaiseVolume exec amixer set Master 2%+ unmute
 #bindsym XF86AudioLowerVolume exec amixer set Master 2%- unmute
@@ -208,6 +217,3 @@ for_window [class="Soffice"] border none
 
 no_focus [class="pop-up"]
 
-# Start redshift with the coordinates for the region Augsburg
-#exec --no-startup-id "redshift -l 48.44111:10.94631"
-exec --no-startup-id "redshift"
