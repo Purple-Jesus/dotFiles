@@ -1,0 +1,127 @@
+#!/bin/bash
+
+uname=`uname -a | awk '{print tolower($0)}'`
+
+type='arch'
+
+if [[ $SHELL == *"zsh"* ]]; then
+	shell="zsh"
+	profile="~/.zprofile"
+	shellrc="~/.zshrc"
+fi
+
+if [[ $SHELL == *"bash"* ]]; then
+	shell="bash"
+	profile="~/.bash_profile"
+	shellrc="~/.bashrc"
+fi
+
+function base {
+	if [ "${type/$uname}" = "$type" ]; then
+		sudo pacman -Syu
+
+		# Install basics
+		sudo pacman -S sakura tilda tmux git firefox thunderbird
+
+		# Install multimedia
+		sudo pacman -S vlc audacious vorbit-tools youtube-dl
+
+		# Install python 
+		sudo pacman -S python python2 ipython python-cherrypy python-mathplotlib python-pip python2-pip
+
+		# Create folders if doesn't exists
+		if ![[ -d ~/Documents/prog/fromOthers ]]; then
+			mkdir -p ~/Documents/prog/fromOthers
+		fi
+
+		if ![[ -d ~/.local/bin ]]; then
+			mkdir -p ~/.local/bin
+		fi
+
+		# Get config files and create symbolic links
+		git clone https://github.com/MisterHyde/Files
+		files=(".bash_aliases" ".gitconfig" ".tmux.conf" ".vimrc" ".zshrc")
+		for file in files; do
+			if [[ -f ~/$file ]]; then 
+				mv ~/$file ~/$file.bak
+			fi
+			ln -s ~/Files/$file ~/$file
+			
+		done
+
+		# Install aurs 
+		cd ~/Documents/prog/fromOthers/
+
+		git clone https://github.com/huyng/bashmarks 
+		cd bashmarks
+		make install
+		echo "source ~/.local/bin/bashmarks.sh # Move to an more appropriate place" >> $shellrc 
+		vim $shellrc
+
+		cd ~
+	fi
+}
+
+# Install and configure dnscrypt-proxy
+function configCryptDns {
+	sudo pacman -S dnscrypt-proxy pdnsd
+	sudo useradd -r -d /var/dnscrypt -m -s /sbin/nologin dnscrypt
+	#TODO check if file exists
+	sudo echo "[Service]
+	ExecStart=
+	ExecStart=/usr/bin/dnscrypt-proxy -R cs-de --user=dnscrypt" > /etc/systemd/dnscrypt-proxy.service
+
+	sudo echo "nameserver 127.0.0.1" >> /etc/resolv.conf
+	sudo vim /etc/resolv.conf 
+
+	#TODO check if file exists
+	sudo echo "[Socket]
+	ListenStream=
+	ListenDatagram=
+	ListenStream=127.0.0.1:40
+	ListenDatagram=127.0.0.1:40" > /etc/systemd/dnscrypt-proxy.socket
+	sudo systemctl stop dnscrypt-proxy.service
+	sudo systemctl restart dnscrypt-proxy.socket
+
+	#TODO check if file exists
+	sudo echo "global {
+		perm_cache = 1024;
+		cache_dir = "/var/cache/pdnsd";
+		run_as = "pdnsd";
+		server_ip = 127.0.0.1;
+		status_ctl = on;
+		query_method = udp_tcp;
+		min_ttl = 15m;       # Retain cached entries at least 15 minutes.
+		max_ttl = 1w;        # One week.
+		timeout = 10;        # Global timeout option (10 seconds).
+		neg_domain_pol = on;
+		udpbufsize = 1024;   # Upper limit on the size of UDP messages.
+	}
+
+	server {
+		label = "dnscrypt-proxy";
+		ip = 127.0.0.1;
+		port = 40;
+		timeout = 4;
+		proxy_only = on;
+	}
+
+	source {
+		owner = localhost;
+		file = "/etc/hosts";
+	}" > /etc/pdnsd.conf
+
+	sudo systemctl restart pdnsd.service
+	#TODO Enable EDNS0
+}
+
+while true; do
+	echo -n "What do you want to do? (base, dnscrypt, exit): "
+	read what
+	case $what in 
+		base ) base; break;;
+		dnscrypt ) dnscrypt; break;;
+		exit ) exit;;
+		* ) base;;
+	esac
+done

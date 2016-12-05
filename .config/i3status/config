@@ -24,6 +24,7 @@ order += "ethernet _first_"
 #order += "battery 0"
 order += "load"
 order += "arch_updates"
+order += "systemtrays"
 order += "tztime local"
 
 #volume master{
@@ -39,6 +40,10 @@ order += "tztime local"
 
 audacious {
 	cache_timeout = 60
+}
+
+systemtrays {
+	tray_output none
 }
 
 chkeymap {
@@ -82,6 +87,7 @@ run_watch VPN {
 }
 
 tztime local {
+		on_click 1 = "exec gsimplecal"
         format = "%Y-%m-%d %H:%M"
 }
 
