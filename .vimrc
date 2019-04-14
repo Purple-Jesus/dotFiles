@@ -7,6 +7,8 @@ set tabstop=4
 set shiftwidth=4
 set textwidth=110
 set hidden " Required for ctrlSpace
+set number " Show line number
+set relativenumber " Show relative line numbers
 "set foldmethod=syntax
 "set foldnestmax=1
 let mapleader=","
@@ -20,19 +22,20 @@ syntax on
 " acitivate mouse 
 set mouse=a
 if !has("nvim")
-    set ttymouse=xterm2
+	set ttymouse=xterm2
 endif
 "set selectmode+=mouse
 " Treat long lines as break lines (useful when moving around in them)
 map j gj
 map k gk
+imap jj <ESC>
+nmap <C-m> <PageDown>
+nmap <C-f> :grep -rIne /<C-R>/[g][j]<CR>
+nnoremap F :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
 " allow backspace to delete 'tabs' 'end of line' and the 'start of the current
 " insert'
 set backspace=indent,eol,start
-" Shortkeys for easy tab navigation
-nnoremap <F3> :tabprevious<CR>
-nnoremap <F4> :tabnext<CR>
-nnoremap <F2> :tabfirst<CR>
 " Status line
 set laststatus=2
 " => Spell checking
@@ -50,14 +53,95 @@ nmap <silent> <A-Up> :wincmd k<CR>
 nmap <silent> <A-Down> :wincmd j<CR>
 nmap <silent> <A-Left> :wincmd h<CR>
 nmap <silent> <A-Right> :wincmd l<CR>
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 " If the file is a rst file then load the virtualenv in which vim_bridge is installed
 "autocmd BufRead *.rst VirtualEnvActivate pyvim
 
+" Shortkeys for easy tab navigation
+nnoremap <F3>  :tabprevious<CR>
+nnoremap <F4>  :tabnext<CR>
+nnoremap <F2>  :tabfirst<CR>
 " Toggle highlighting search results
-nnoremap <F6> :set hlsearch!<CR>
-nnoremap <F9> :set mouse=r<CR>
-nnoremap <F10> :set mouse=a<CR>
+nnoremap <F6>  :set hlsearch!<CR>
+nnoremap <F11> :set mouse=r<CR>
+nnoremap <F12> :set mouse=a<CR>
+nnoremap <F7>  :NERDTreeToggle<CR>
+nnoremap <F8>  :Tagbar<CR>
+nnoremap <F10> :UndotreeToggle
+
+"SEARCH REPLACEMENT EASYMOTION
+
+map  / <Plug>(easymotion-sn)
+
+omap / <Plug>(easymotion-tn)
+
+" These `n` & `N` mappings are options. You do not have to map `n` & `N` to EasyMotion.
+
+" Without these mappings, `n` & `N` works fine. (These mappings just provide
+
+" different highlight method and have some other features )
+
+map  n <Plug>(easymotion-next)
+
+map  N <Plug>(easymotion-prev)
+
+set hlsearch
+
+let hlstate=1
+
+ 
+
+"NAVIGATE BETWEEN SPLITS
+
+nnoremap <C-J> <C-W><C-J>
+
+nnoremap <C-K> <C-W><C-K>
+
+nnoremap <C-L> <C-W><C-L>
+
+nnoremap <C-H> <C-W><C-H>
+
+
+"RESIZE SPLITS
+
+set winheight=5
+
+set winwidth=10
+
+set winminheight=5
+
+set winminwidth=10
+
+nnoremap <silent> <S-K> :res+5<CR>
+
+nnoremap <silent> <S-J> :res-5<CR>
+
+nnoremap <silent> <S-H> :vertical res-10<CR>
+
+nnoremap <silent> <S-L> :vertical res+10<CR>
+
+" Pull word under cursor into LHS of a substitute (for quick search and replace)
+nnoremap <leader>z :%s#\<<C-r>=expand("<cword>")<CR>\>#
+
+function! SetTagPath()
+	let tagDir = fnamemodify(finddir('.git', '.;'), ':h')
+	let &tags=tagDir . "/.tags"
+endfunction
+
+call SetTagPath()
+
+function! GenerateProjectTags()
+   let rootDir = fnamemodify(finddir('.git', '.;'), ':h')
+   "let rootDir = g:NERDTreeFileNode.GetSelected().path.str()
+   exec  ':!ctags -R --exclude=".git" -f ' . rootDir . '/.tags ' . rootDir
+   let &tags=rootDir. "/.tags"
+endfunction
+
+nnoremap <F9> :call GenerateProjectTags()<CR>
 
 """""""""""""""""""""""""""
 " configure vbundle
@@ -70,45 +154,34 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " Let Vundle manage itself (required)
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " Install and use the following Plugins:
 Plugin 'vim-scripts/sudo.vim'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets.git'
 Plugin 'jezcope/vim-align'
 Plugin 'scrooloose/nerdtree'
-"Plugin 'powerline/powerline'
-"Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-airline/vim-airline'
-"Plugin 'vim-airline/vim-bufferline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'powerline/fonts'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'nvie/vim-rst-tables.git'
 Plugin 'majutsushi/tagbar'
-Plugin 'vim-php/tagbar-phpctags.vim'
-" Syntax completion; needs external programms see homepage
-"Plugin 'Valloric/YouCompleteMe'
-"Plugin 'rdnetto/YCM-Generator'
-"Plugin 'altercation/vim-colors-solarized.git'
 " Syntax checking plugin
 Plugin 'scrooloose/syntastic.git'
 " Search and display information from arbitrary sources like files
 Plugin 'Shougo/unite.vim'
-" Another status line plugin 
-"Plugin 'itchyny/lightline.vim'
 " Full path fuzzy file finder
 Plugin 'ctrlpvim/ctrlp.vim'
 " Git in vim 
 Bundle 'tpope/vim-fugitive'
 " Completion script
-Bundle 'Shougo/neocomplete.vim'
-" Spread nerdtree over all tabs
-"Bundle 'jistr/vim-nerdtree-tabs'
 " Controle your tabs
 Bundle 'vim-ctrlspace/vim-ctrlspace'
+Bundle 'vim-scripts/groovy.vim'
+Bundle 'morhetz/gruvbox'
+Bundle 'mbbill/undotree'
+Bundle 'easymotion/vim-easymotion'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Surrond stuff with things. ysiw" surrounds a word with quotes
@@ -124,51 +197,11 @@ Bundle 'tpope/vim-repeat'
 " Tab to indent or autocomplete depending on context
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'ervandew/supertab'
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Improved javascript indentation
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
- Bundle 'pangloss/vim-javascript'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vim Git runtime files
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'tpope/vim-git'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Vim runtime files for Haml, Sass, and SCSS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'tpope/vim-haml'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Vim Markdown runtime files
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'tpope/vim-markdown'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" vim handlebars runtime files
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'nono/vim-handlebars'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Syntax for jquery keywords and selectors
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'itspriddle/vim-jquery'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Vim syntax for jst files
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'jeyb/vim-jst'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Syntax for nginx
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'mutewinter/nginx.vim'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Makes css colors show up as their actual colors, works better with CSApprox
-" or macvim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'ap/vim-css-color'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " My favorite dark color scheme
@@ -191,97 +224,44 @@ Bundle 'jmcantrell/vim-virtualenv'
 filetype on                         " Filetype-Erkennung aktivieren
 filetype indent on                  " Syntax-Einrückungen je nach Filetype
 filetype plugin on                  " Filetype-Plugins erlauben
-colorscheme jellybeans
-
+colorscheme gruvbox
+set background=dark
 
 """""""""""""""""""""""""
 " Airlineconfiguration
 """""""""""""""""""""""""
-let g:airline_powerline_fonts=0
+let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
-	let g:airline_symbols.space = "\ua0"
+let g:airline_symbols.space = "\ua0"
 
-let g:airline_theme="murmur"
-"function! AirlineInit()
-"	let g:airline_section_a = airline#section#create(['mode',' ','branch'])
-"	let g:airline_section_b = airline#section#create_left(['ffenc','hunks','%f'])
-"	let g:airline_section_c = airline#section#create(['filetype'])
-"	let g:airline_section_b = airline#section#create(['%P'])
-"	let g:airline_section_b = airline#section#create(['%B'])
-"	let g:airline_theme="murmur"
-"	"let g:airline_section_b = airline#section#create_right(['%l','%c'])
-"endfunction
-"autocmd VimEnter * call AirlineInit()
+let g:airline_theme="gruvbox"
+
+let g:ariline#extensions#syntastic#stl_format_err = 1
+let g:ariline#extensions#syntastic#stl_format_warn = 1
 
 
 """""""""""""""""""""""""""
 " Configure Syntastic
 """""""""""""""""""""""""""
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_loc_list_height = 5
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-
-"""""""""""""""""""""""""""
-" Configure tagbar-php
-"""""""""""""""""""""""""""
-let g:tagbar_phpctags_bin='~/.vim/bundle/tagbar-phpctags.vim/bin/phpctags'
-"let g:tagbar_phpctags_memory_limit = '512M'
-
-
-""""""""""""""""""""""""""""
-"" Cofigure YouCompleteMe
-""""""""""""""""""""""""""""
-"let g:ycm_filetype_whitelist = { '*': 1}
-"let g:ycm_filetype_blacklist = {
-      "\ 'tagbar' : 1,
-      "\ 'qf' : 1,
-      "\ 'notes' : 1,
-      "\ 'markdown' : 1,
-      "\ 'unite' : 1,
-      "\ 'text' : 1,
-      "\ 'vimwiki' : 1,
-      "\ 'pandoc' : 1,
-      "\ 'infolog' : 1,
-      "\ 'mail' : 1,
-	  "\ 'rst' : 1
-      "\}
-
-""""""""""""""""""""""""""
-" Navigate tmux and vim
-""""""""""""""""""""""""""
-"if exists('$TMUX')
-	"function! TmuxOrSplitSwitch(wincmd, tmuxdir)
-		"let previous_winnr = winnr()
-		"silent! execute "wincmd " . a:wincmd
-		"if previous_winnr == winnr()
-			"call system("tmux select-pane -" . a:tmuxdir)
-			"redraw!
-		"endif
-	"endfunction
-
-	"let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
-	"let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
-	"let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
-
-	"nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
-	"nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
-	"nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
-	"nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
-"else
-	"map <C-h> <C-w>h
-	"map <C-j> <C-w>j
-	"map <C-k> <C-w>k
-	"map <C-l> <C-w>l
-"endif
-
-
+let g:syntastic_error_symbol = "✗"
+let g:syntastic_warning_symbol = "⚠"
+let g:syntastic_quiet_messages = {
+			\ "!level":  "errors",
+			\ "type":    "style",
+			\ "regex":   '\m\[C03\d\d\]',
+			\ "file:p":  ['\m^/usr/include/', '\m\c\.h$', '\m\c\.c$'] }
+"let g:ycm_show_diagnostic_ui = 0 " In case ycm is running and syntastic should run too
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ARROW KEYS ARE UNACCEPTABLE
@@ -295,8 +275,8 @@ let g:tagbar_phpctags_bin='~/.vim/bundle/tagbar-phpctags.vim/bin/phpctags'
 " tmux stuff
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('mouse')
-set mouse=a
-	 if &term =~ "xterm" || &term =~ "screen"
+	set mouse=a
+	if &term =~ "xterm" || &term =~ "screen"
 		" for some reason, doing this directly with 'set ttymouse=xterm2'
 		" doesn't work -- 'set ttymouse?' returns xterm2 but the mouse
 		" makes tmux enter copy mode instead of selecting or scrolling
@@ -319,9 +299,9 @@ map <leader>P "*P
 " Quit help easily
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! QuitWithQ()
-   if &buftype == 'help'
-       nnoremap <buffer> <silent> q :q<cr>
-   endif
+	if &buftype == 'help'
+		nnoremap <buffer> <silent> q :q<cr>
+	endif
 endfunction
 autocmd FileType help exe QuitWithQ()
 
@@ -333,93 +313,45 @@ set undodir=$HOME/.vim/undo
 set undolevels=1000
 set undoreload=10000
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Ultisnips
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Neocomplete
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php setlocal omnifunc=pythoncomplete#Complete
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-"""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ctrlspace
-"""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+
+let g:ctrlp_root_markers = ".projectroot"
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+			\ 'dir':  '\v[\/]\.(git|hg|svn)$',
+			\ 'file': '\v\.(exe|so|d'
+			\ }
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" The Silver Searcher
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if executable('ag')
+	" Use ag over grep
+	set grepprg=ag\ --nogroup\ --nocolor
+	" Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+	let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+	" ag is fast enough that CtrlP doesn't need to cache
+	let g:ctrlp_use_caching = 0
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Store the bookmarks file
+let NERDTreeBookmarksFile=expand("$HOME/.vim/NERDTreeBookmarks")
+
+" Show the bookmarks table on startup
+let NERDTreeShowBookmarks=1
+
+" Use a single click to fold/unfold directories and a double click to open
+" files
+let NERDTreeMouseMode=2
+
+" Don't display these kinds of files
+let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
+            \ '\.o$', '\.so$', '\.egg$', '^\.git$', '__pycache__', '\.DS_Store' ]
 
