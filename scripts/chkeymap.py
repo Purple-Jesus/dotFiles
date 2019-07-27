@@ -24,7 +24,7 @@ class Py3status:
         keymap = 'de'
         if "de" in self.full_text:
             keymap = 'us'
-        if "us" in self.full_text:
+        elif "us" in self.full_text:
             keymap = 'de'
         process = subprocess.Popen(['setxkbmap', keymap], shell=False, stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)

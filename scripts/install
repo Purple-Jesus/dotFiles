@@ -2,7 +2,13 @@
 
 uname=`uname -a | awk '{print tolower($0)}'`
 
-type='arch'
+if which pacman; then
+	type='arch'
+elif which apt-cache; then
+	type='debian'
+else
+	type''
+fi
 
 if [[ $SHELL == *"zsh"* ]]; then
 	shell="zsh"
@@ -16,12 +22,12 @@ if [[ $SHELL == *"bash"* ]]; then
 	shellrc="~/.bashrc"
 fi
 
-function base {
+function archInstalBase {
 	if [ "${type/$uname}" = "$type" ]; then
 		sudo pacman -Syu
 
 		# Install basics
-		sudo pacman -S sakura tilda tmux git firefox thunderbird
+		sudo pacman -S sakura tmux git firefox evolution i3 i3lock pcmanfm gsimplecal
 
 		# Install multimedia
 		sudo pacman -S vlc audacious vorbit-tools youtube-dl

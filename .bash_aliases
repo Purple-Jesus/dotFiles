@@ -9,10 +9,8 @@ alias la='ls -lha'
 alias sl='echo "Hoppla ;-)" && ls'
 alias v='vim'
 # An easy to use command without specifying the exact position of the displays is: xrandr --output LVDS1 --auto --output DP1 --auto --left-of VGA1
-alias zwei='xrandr --output LVDS1 --mode 1280x800 --pos 1920x900 --output DP1 --mode 1920x1080 --pos 0x0'
+alias zwei='xrandr --output DP1 --mode 1280x800 --pos 1920x900 --output HDMI1 --mode 1920x1080 --pos 0x0'
 alias eins='xrandr --output LVDS1 --auto'
-
-alias i3lock='i3lock -i /usr/share/images/darksouls.png -p default -d'
 
 # Semester aliases für viel benutze PDFs
 alias rt='zathura ~/Documents/aktuelles_Semester/RT/Vollständiges\ Skript\ RT.pdf 2> /dev/null&'
