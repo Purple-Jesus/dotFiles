@@ -7,14 +7,6 @@ set hidden
 
 set diffopt=filler,context:2,iwhite
 
-"REMOVE MENUBAR AND TOOLBAR
-set go=c
-"set go-=m
-"set go-=T
-"set go-=r
-"set go-=L
-autocmd SwapExists * let v:swapchoice="o"
-
 "MISC
 set listchars=tab:•\ ,trail:•,extends:»,precedes:«
 let g:screen_size_restore_pos=1
@@ -38,20 +30,17 @@ set undolevels=1000
 set undoreload=10000
 set ignorecase
 set smartcase
-set path=./**
 set nowrap
-set tw=0
+set tw=110
 set cursorline
 hi cursorline cterm=none
 hi cursorlinenr ctermfg=black
-syntax enable
 
 "TAGS
 set tags=tags
 
-
 " Close help window just with q
-autocmd FileType help noremap <buffer> q :q<cr>
+"autocmd FileType help noremap <buffer> q :q<cr>
 
 """""""""""""""""""""""""""
 " configure vbundle
@@ -71,7 +60,7 @@ Plugin 'vimwiki/vimwiki.git'
 " Install and use the following Plugins:
 Plugin 'scrooloose/nerdcommenter'
 " Simplify motion in vim 
-"Plugin 'easymotion/vim-easymotion'
+Plugin 'easymotion/vim-easymotion'
 " Show a diff using Vim its sign column.
 Plugin 'mhinz/vim-signify'
 Plugin 'tomtom/tlib_vim'
@@ -86,7 +75,7 @@ Plugin 'majutsushi/tagbar'
 " Visualization and handling of vim undo history
 Plugin 'mbbill/undotree'
 " Syntax completion; needs external programms see homepage
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 "Plugin 'rdnetto/YCM-Generator'
 " Using snippets
 Plugin 'sirver/ultisnips'
@@ -104,13 +93,14 @@ Plugin 'Shougo/unite.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 " Git in vim 
 Plugin 'tpope/vim-fugitive'
-Plugin 'idanarye/vim-merginal'
+" Branche control
+Plugin 'idanarye/vim-merginal' 
 " Completion script
 Plugin 'Shougo/neocomplete.vim'
 " Spread nerdtree over all tabs
 "Bundle 'jistr/vim-nerdtree-tabs'
 " Controle your tabs
-"Plugin 'vim-ctrlspace/vim-ctrlspace'
+Plugin 'vim-ctrlspace/vim-ctrlspace'
 " Surrond stuff with things
 Plugin 'tpope/vim-surround'
 " Lets you use . to repeat some things like vim-surround
@@ -140,39 +130,40 @@ call vundle#end()
 filetype on                         " Filetype-Erkennung aktivieren
 filetype indent on                  " Syntax-Einrückungen je nach Filetype
 filetype plugin on                  " Filetype-Plugins erlauben
+syntax enable
 
 "STYLE
 let base16colorspace=256
-set background=dark
 colorscheme gruvbox
+set background=dark
 
 """""""""""""""""""""""""
 " Airlineconfiguration
 """""""""""""""""""""""""
-let g:airline_powerline_fonts=0
+let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
 let g:airline_symbols.space = "\ua0"
 
-"let g:airline_theme="murmur"
-let g:airline_theme="gruvbox"
+let g:airline_theme="murmur"
+"let g:airline_theme="gruvbox"
 
 "AUTOCOMPLETION
-autocmd FileType c set omnifunc=ccomplete#Complete
-set cpt-=i
-let g:SuperTabDefaultCompletionType="context"
+"autocmd FileType c set omnifunc=ccomplete#Complete
+"set cpt-=i
+"let g:SuperTabDefaultCompletionType="context"
 "Snippets
-let g:commentChar={'vim': '"', 'c': '//', 'cpp': '//', 'h': '//'}
-let g:snipMate={}
-"let g:snipMate.scope_aliases={}
-let g:snipMate.snippet_version=1
+"let g:commentChar={'vim': '"', 'c': '//', 'cpp': '//', 'h': '//'}
+"let g:snipMate={}
+""let g:snipMate.scope_aliases={}
+"let g:snipMate.snippet_version=1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " YouCompleteMe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ycm_clangd_binary_path = "/usr/bin/clangd"
+"let g:ycm_clangd_binary_path = "/usr/bin/clangd"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Configure ale
@@ -189,8 +180,8 @@ let g:ale_set_quickfix = 0
 " tmux stuff
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('mouse')
-set mouse=a
-	 if &term =~ "xterm" || &term =~ "screen"
+	set mouse=a
+	if &term =~ "xterm" || &term =~ "screen"
 		" for some reason, doing this directly with 'set ttymouse=xterm2'
 		" doesn't work -- 'set ttymouse?' returns xterm2 but the mouse
 		" makes tmux enter copy mode instead of selecting or scrolling
@@ -213,9 +204,9 @@ map <leader>P "*P
 " Quit help easily
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! QuitWithQ()
-   if &buftype == 'help'
-       nnoremap <buffer> <silent> q :q<cr>
-   endif
+	if &buftype == 'help'
+		nnoremap <buffer> <silent> q :q<cr>
+	endif
 endfunction
 autocmd FileType help exe QuitWithQ()
 
@@ -234,12 +225,6 @@ map  N <Plug>(easymotion-prev)
 set hlsearch
 let hlstate=1
 
-"NAVIGATE BETWEEN SPLITS
-map <C-j> :wincmd j<CR>
-map <C-k> :wincmd k<CR>
-map <C-l> :wincmd l<CR>
-map <C-h> :wincmd h<CR>
-
 "RESIZE SPLITS
 set winheight=5
 set winwidth=10
@@ -249,6 +234,12 @@ nnoremap <silent> <S-K> :res+5<CR>
 nnoremap <silent> <S-J> :res-5<CR>
 nnoremap <silent> <S-H> :vertical res-10<CR>
 nnoremap <silent> <S-L> :vertical res+10<CR>
+
+"NAVIGATE BETWEEN SPLITS
+nnoremap <C-J> :wincmd j<CR>
+nnoremap <C-K> :wincmd k<CR>
+nnoremap <C-L> :wincmd l<CR>
+nnoremap <C-H> :wincmd h<CR>
 
 "CTRL-P OPTIONS
 let g:ctrlp_regexp=1
