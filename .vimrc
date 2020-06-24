@@ -39,6 +39,8 @@ hi cursorlinenr ctermfg=black
 "TAGS
 set tags=tags
 
+" Binary for the fuzzy finder
+set rtp+=~/.fzf
 " Close help window just with q
 "autocmd FileType help noremap <buffer> q :q<cr>
 
@@ -87,6 +89,7 @@ Plugin 'honza/vim-snippets.git'
 " Syntax checking plugin
 "Plugin 'scrooloose/syntastic.git'
 Plugin 'w0rp/ale'
+Plugin 'Shougo/deoplete.nvim'
 " Search and display information from arbitrary sources like files
 Plugin 'Shougo/unite.vim'
 " Full path fuzzy file finder
@@ -121,6 +124,16 @@ Plugin 'jmcantrell/vim-virtualenv'
 Plugin 'ludovicchabant/vim-gutentags'
 " Vim latex suit
 Plugin 'lervag/vimtex'
+" Fuzzy finder
+Plugin 'junegunn/fzf.vim'
+" Ascii plantuml
+Plugin 'scrooloose/vim-slumlord'
+Plugin 'aklt/plantuml-syntax'
+" Debugger for vim
+Plugin 'puremourning/vimspector'
+" Call tree
+Plugin 'hari-rangarajan/CCTree'
+Plugin 'kien/rainbow_parentheses.vim'
 
 call vundle#end()
 
@@ -147,8 +160,10 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.space = "\ua0"
 
-let g:airline_theme="murmur"
-"let g:airline_theme="gruvbox"
+"let g:airline_theme="murmur"
+let g:airline_theme="gruvbox"
+
+let g:gruvbox_contrast_light='hard'
 
 "AUTOCOMPLETION
 "autocmd FileType c set omnifunc=ccomplete#Complete
@@ -175,6 +190,25 @@ let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_enter = 0
 let g:ale_set_loclist = 1
 let g:ale_set_quickfix = 0
+let b:ale_linters = ['clang', 'clangtidy', 'gcc']
+let b:ale_fixers = ['clangtidy', 'remove_trailing_lines', 'trim_whitespace']
+let g:ale_c_parse_compile_commands = 1
+
+" Use ALE and also some plugin 'foobar' as completion sources for all code.
+call deoplete#custom#option('sources', {
+\ '_': ['ale', 'foobar'],
+\})
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Configure vimspector
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"let g:vimspector_enable_mappings = 'HUMAN'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Configure gutentags
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Just parse c++ files otherwise ctags generates a malformed tag file for the iu_app project...
+let g:gutentags_ctags_extra_args = ['-R','--c++-kinds=+p --fields=+iaS --extra=+q']
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " tmux stuff
@@ -225,6 +259,9 @@ map  N <Plug>(easymotion-prev)
 set hlsearch
 let hlstate=1
 
+map  ? :Ag 
+omap ? :Ag 
+
 "RESIZE SPLITS
 set winheight=5
 set winwidth=10
@@ -240,6 +277,12 @@ nnoremap <C-J> :wincmd j<CR>
 nnoremap <C-K> :wincmd k<CR>
 nnoremap <C-L> :wincmd l<CR>
 nnoremap <C-H> :wincmd h<CR>
+
+nmap <backspace> <C-t>
+
+" Changing the syntax of vimwiki to markdown
+" let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
+
 
 "CTRL-P OPTIONS
 let g:ctrlp_regexp=1
@@ -258,8 +301,40 @@ let mapleader = ","
 
 let g:signify_disable_by_default = 1
 
+" Rainbow paranteses
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
 nnoremap <Leader>oc :e %<.c<CR>
 nnoremap <Leader>oh :e %<.h<CR>
+
+" The output of plantuml shifts airline which makes the content of the whole window unreadable
+"augroup ExecOnWrite
+"   autocmd BufWritePost *.uml silent !plantuml <afile>
+"augroup end
 
 map <silent><F1> :UndotreeToggle<CR>
 noremap <silent><F2> :SignifyToggle<CR>
