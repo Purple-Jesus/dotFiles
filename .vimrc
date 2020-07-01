@@ -93,7 +93,7 @@ Plugin 'Shougo/deoplete.nvim'
 " Search and display information from arbitrary sources like files
 Plugin 'Shougo/unite.vim'
 " Full path fuzzy file finder
-Plugin 'ctrlpvim/ctrlp.vim'
+" Plugin 'ctrlpvim/ctrlp.vim'
 " Git in vim 
 Plugin 'tpope/vim-fugitive'
 " Branche control
@@ -259,8 +259,8 @@ map  N <Plug>(easymotion-prev)
 set hlsearch
 let hlstate=1
 
-map  ? :Ag 
-omap ? :Ag 
+map  ? :Ag <C-R><C-W><CR>
+omap  ? :Ag <C-R><C-W><CR>
 
 "RESIZE SPLITS
 set winheight=5
@@ -284,18 +284,19 @@ nmap <backspace> <C-t>
 " let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
 
 
+nnoremap <C-P> :Files<CR>
 "CTRL-P OPTIONS
-let g:ctrlp_regexp=1
-let g:ctrlp_working_path_mode='ra'
-let g:ctrlp_root_markers =['projectrootmarker']
-let g:ctrlp_use_caching=1
-let g:ctrlp_clear_cache_on_exit=0
-let g:ctrlp_lazy_update=500
-let g:ctrlp_mruf_case_sensitive=0
-let g:ctrlp_match_window='bottom,order:btt,min:1,max:15,results:50'
-let g:ctrlp_custom_ignore={'dir': '\v[\/]\.(git|hg|svn)$',
-\ 'file': '\v\.(exe|bat|boot|eep|elf|clc|ld|so|o|a|map|bak|cfg|ini|dll|chm|hex|swp|zip|rar|db|txt|pdf|doc|docx|pjt|wsp|wsx|xlsm|xls|db\-journal|svn\-base|bmp|jpg|jpeg|png)$',}
-let g:ctrlp_mruf_include='\.h$\|\.c$|\.make$'
+"let g:ctrlp_regexp=1
+"let g:ctrlp_working_path_mode='ra'
+"let g:ctrlp_root_markers =['projectrootmarker']
+"let g:ctrlp_use_caching=1
+"let g:ctrlp_clear_cache_on_exit=0
+"let g:ctrlp_lazy_update=500
+"let g:ctrlp_mruf_case_sensitive=0
+"let g:ctrlp_match_window='bottom,order:btt,min:1,max:15,results:50'
+"let g:ctrlp_custom_ignore={'dir': '\v[\/]\.(git|hg|svn)$',
+"\ 'file': '\v\.(exe|bat|boot|eep|elf|clc|ld|so|o|a|map|bak|cfg|ini|dll|chm|hex|swp|zip|rar|db|txt|pdf|doc|docx|pjt|wsp|wsx|xlsm|xls|db\-journal|svn\-base|bmp|jpg|jpeg|png)$',}
+"let g:ctrlp_mruf_include='\.h$\|\.c$|\.make$'
 
 let mapleader = ","
 
@@ -329,6 +330,7 @@ au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
 nnoremap <Leader>oc :e %<.c<CR>
+nnoremap <Leader>op :e %<.cpp<CR>
 nnoremap <Leader>oh :e %<.h<CR>
 
 " The output of plantuml shifts airline which makes the content of the whole window unreadable

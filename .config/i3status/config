@@ -25,7 +25,7 @@ order += "run_watch VPN"
 order += "ethernet _first_"
 #order += "battery 0"
 order += "load"
-order += "arch_updates"
+#order += "arch_updates"
 #order += "systemtrays"
 order += "tztime local"
 
@@ -52,7 +52,7 @@ process_status {
 }
 
 keyboard_layout {
-	layouts = ['us', 'de', 'dvorak']
+	layouts = ['us', 'de']
 }
 
 audacious {
