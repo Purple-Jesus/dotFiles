@@ -278,7 +278,11 @@ nnoremap <C-K> :wincmd k<CR>
 nnoremap <C-L> :wincmd l<CR>
 nnoremap <C-H> :wincmd h<CR>
 
+" Jump tags back with backspace
 nmap <backspace> <C-t>
+
+" Make backspace delete again
+set backspace=indent,eol,start
 
 " Changing the syntax of vimwiki to markdown
 " let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
