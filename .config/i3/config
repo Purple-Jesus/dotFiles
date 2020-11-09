@@ -167,6 +167,7 @@ bar {
         status_command py3status -l "/tmp/py3status.log"
         tray_output none
 }
+# $i3-theme-bar
 
 workspace_layout tabbed
 
@@ -234,8 +235,8 @@ set $gray #a89984
 set $darkgray #1d2021
 # green gruvbox
 # class                 border|backgr|text|indicator|child_border
-client.focused          $green $green $darkgray $purple $darkgray
-client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
-client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
-client.urgent           $red $red $white $red $red
-
+#client.focused          $green $green $darkgray $purple $darkgray
+#client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+#client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+#client.urgent           $red $red $white $red $red
+# $i3-theme-window

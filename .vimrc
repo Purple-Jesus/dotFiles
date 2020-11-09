@@ -40,7 +40,7 @@ hi cursorlinenr ctermfg=black
 set tags=tags
 
 " Binary for the fuzzy finder
-set rtp+=~/.fzf
+set rtp+=~/gitprojects/fzf
 " Close help window just with q
 "autocmd FileType help noremap <buffer> q :q<cr>
 
@@ -122,6 +122,7 @@ Plugin 'morhetz/gruvbox'
 Plugin 'jmcantrell/vim-virtualenv'
 " Tag files handling
 Plugin 'ludovicchabant/vim-gutentags'
+Plugin 'skywind3000/gutentags_plus'
 " Vim latex suit
 Plugin 'lervag/vimtex'
 " Fuzzy finder
@@ -162,6 +163,15 @@ let g:airline_symbols.space = "\ua0"
 
 "let g:airline_theme="murmur"
 let g:airline_theme="gruvbox"
+let g:airline#extensions#branch#displayed_head_limit = 45
+" Disable whitespace checker. In case of messy old files which git history should not be changed
+let b:airline_whitespace_disabled = 1
+" Or shorter error messages
+let g:airline#extensions#whitespace#trailing_format = 't[%s]'
+let g:airline#extensions#whitespace#mixed_indent_format =
+ \ 'mi[%s]'
+let g:airline#extensions#whitespace#mixed_indent_file_format =
+ \ 'mif[%s]'
 
 let g:gruvbox_contrast_light='hard'
 
@@ -193,6 +203,7 @@ let g:ale_set_quickfix = 0
 let b:ale_linters = ['clang', 'clangtidy', 'gcc']
 let b:ale_fixers = ['clangtidy', 'remove_trailing_lines', 'trim_whitespace']
 let g:ale_c_parse_compile_commands = 1
+let g:ale_c_build_dir = '~/felix/iu_appGoodBuild'
 
 " Use ALE and also some plugin 'foobar' as completion sources for all code.
 call deoplete#custom#option('sources', {
@@ -209,6 +220,9 @@ call deoplete#custom#option('sources', {
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Just parse c++ files otherwise ctags generates a malformed tag file for the iu_app project...
 let g:gutentags_ctags_extra_args = ['-R','--c++-kinds=+p --fields=+iaS --extra=+q']
+let g:gutentags_moduels = ['ctags', 'gtags_cscope']
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+let g:gutentags_plus_switch = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " tmux stuff
@@ -262,6 +276,7 @@ let hlstate=1
 map  ? :Ag <C-R><C-W><CR>
 omap  ? :Ag <C-R><C-W><CR>
 
+
 "RESIZE SPLITS
 set winheight=5
 set winwidth=10
@@ -273,13 +288,24 @@ nnoremap <silent> <S-H> :vertical res-10<CR>
 nnoremap <silent> <S-L> :vertical res+10<CR>
 
 "NAVIGATE BETWEEN SPLITS
-nnoremap <C-J> :wincmd j<CR>
-nnoremap <C-K> :wincmd k<CR>
-nnoremap <C-L> :wincmd l<CR>
-nnoremap <C-H> :wincmd h<CR>
+"nnoremap <C-l> :wincmd l<CR>
+"nnoremap <C-h> :wincmd h<CR>
+"nnoremap <C-k> :wincmd k<CR>
+"nnoremap <C-j> :wincmd j<CR>
+nmap <C-L> <C-W><C-L>
+nmap <C-H> <C-W><C-H>
+nmap <C-K> <C-W><C-K>
+nmap <C-J> <C-W><C-J>
+nnoremap gl <C-W><C-L>
+nnoremap gh <C-W><C-H>
+nnoremap gk <C-W><C-K>
+nnoremap gj <C-W><C-J>
 
 " Jump tags back with backspace
 nmap <backspace> <C-t>
+
+inoremap jj <ESC>
+inoremap jk <ESC>
 
 " Make backspace delete again
 set backspace=indent,eol,start
@@ -287,12 +313,14 @@ set backspace=indent,eol,start
 " Changing the syntax of vimwiki to markdown
 " let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
 
+" Use latex instead of plain tex
+let g:tex_flavor = 'latex'
 
 nnoremap <C-P> :Files<CR>
 "CTRL-P OPTIONS
 "let g:ctrlp_regexp=1
 "let g:ctrlp_working_path_mode='ra'
-"let g:ctrlp_root_markers =['projectrootmarker']
+let g:ctrlp_root_markers =['projectrootmarker']
 "let g:ctrlp_use_caching=1
 "let g:ctrlp_clear_cache_on_exit=0
 "let g:ctrlp_lazy_update=500
@@ -326,7 +354,7 @@ let g:rbpt_colorpairs = [
     \ ['red',         'firebrick3'],
     \ ]
 
-let g:rbpt_max = 16
+let g:rbpt_max = 5
 let g:rbpt_loadcmd_toggle = 0
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
@@ -351,3 +379,13 @@ map <silent><F7> :NERDTreeToggle<CR>
 nmap <silent><F8> :TagbarToggle<CR>
 nnoremap <F9> :set mouse=r<CR>
 nnoremap <F10> :set mouse=a<CR>
+
+let g:termdebugger = "/opt/gcc-arm-none-eabi-6-2017-q1-update/bin/arm-none-eabi-gdb-py"
+let g:termdebug_wide = 163
+nnoremap <silent> <leader>b :Break<CR>
+nnoremap <silent> <leader>bc :Clear<CR>
+nnoremap <silent> <leader>c :Continue<CR>
+nnoremap <silent> <leader>n :Over<CR>
+nnoremap <silent> <leader>s :Step<CR>
+nnoremap <silent> <leader>e :Eval<CR>
+nnoremap <silent> <leader>f :Finish<CR>
