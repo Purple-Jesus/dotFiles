@@ -14,6 +14,9 @@ stuff. So let my, partial, knowledge impress you.
 - *display /ni $pc* Print the next _n_ instructions
 - *si/ni* Step/Next instruction
 - *layout* Changes the layout if in tui mode: *asm*, *src*, *regs*...
+- *TUI*: Layout the GDB window with other view as just the console interpreter:
+    - *layout* Changes the layout if in tui mode: *next*, *prev*, *asm*, *src*, *regs*...
+    - *focus* _name_: Changes which layout window should be scrollable
 
 == make == 
 - *ifeq ($(OS), Windows_NT)* Checks if OS is a windows
@@ -22,3 +25,14 @@ stuff. So let my, partial, knowledge impress you.
 - *C-x C-f* Call omni complete file name
 - *C-W o* Close all splits but the current one
 - *C-W =* Normalize all split sizes
+- *:windo difft[his]* diff the current split
+- *:diffo[ff]* End diff mode
+- Bookmarks:
+    - *mA* Create a global bookmark. Global because it is upper case. Local bookmarks are just valid inside one file.
+    - *'A*  And jump back to it. 
+    - *``A* 
+
+== Terminal tools ==
+- *reset* fixes a messed up terminal state
+- *vim $(find ... )* opens all found files in buffers
+- *find -name something -exec vim {} \;* opens each found file with vim

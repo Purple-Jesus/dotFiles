@@ -311,7 +311,7 @@ inoremap jk <ESC>
 set backspace=indent,eol,start
 
 " Changing the syntax of vimwiki to markdown
-" let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
 
 " Use latex instead of plain tex
 let g:tex_flavor = 'latex'
