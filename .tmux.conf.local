@@ -262,5 +262,6 @@ tmux_conf_battery_status_discharging='↓'    # U+2193
 tmux_conf_theme_clock_colour='#00afff'  # light blue
 tmux_conf_theme_clock_style='24'
 
-source ~/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf
+#source ~/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf
+source "/usr/share/tmux/powerline.conf"
 set-option -g default-terminal "tmux-256color"

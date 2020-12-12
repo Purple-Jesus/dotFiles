@@ -30,8 +30,8 @@ set undolevels=1000
 set undoreload=10000
 set ignorecase
 set smartcase
-set nowrap
-set tw=110
+set wrap
+set tw=80
 set cursorline
 hi cursorline cterm=none
 hi cursorlinenr ctermfg=black
