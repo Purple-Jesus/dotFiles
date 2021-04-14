@@ -11,15 +11,23 @@ general {
         interval = 5
 }
 
-order += "weather_owm"
-order += "pomodoro"
+#order += "ipv6"
+#order += "xrandr"
+order += "timer"
+order += "process_status"
+#order += "audacious"
+order += "spotify"
 order += "volume_status"
+order += "disk /"
 order += "keyboard_layout"
-order += "wifi"
+#order += "run_watch DHCP"
 order += "run_watch VPN"
+#order += "wireless _first_"
 order += "ethernet _first_"
-order += "battery_level"
+#order += "battery 0"
 order += "load"
+order += "arch_updates"
+#order += "systemtrays"
 order += "tztime local"
 
 #volume master{
@@ -33,21 +41,10 @@ order += "tztime local"
 		#button_mute = 2
 #}
 
-weather_owm {
-    api_key = a60c97d78f33503b15e16feb11aa8f63
-    country = Germany
-    city = Augsburg
-    unit_rain = mm
-    unit_snow = cm
-    unit_temperature = c
-    unit_wind = kmh
-}
-
-pomodoro {
-    format = "{bar}"
-    timer_pomodoro = 1260 # 21 minute for a session
-    timer_break = 180 # 3 minute pause
-    pomodoros = 3 # 3 sessions in a row
+timer {
+    time = 150
+    sound = '/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga'
+    format = 'Tea {timer}'
 }
 
 spotify {
@@ -62,7 +59,7 @@ process_status {
 }
 
 keyboard_layout {
-	layouts = ['us', 'de']
+	layouts = ['us', 'de', 'dvorak']
 }
 
 audacious {
@@ -101,12 +98,9 @@ ethernet _first_ {
         format_up = "E: %ip"
         format_down = "E: down"
 }
-wifi {
-    format = "W:{blocks} {ssid}|W:down"
-}
 
-battery_level {
-        format = "{percent}%"
+battery 0 {
+        format = "%status %percentage %remaining"
 }
 
 run_watch DHCP {
