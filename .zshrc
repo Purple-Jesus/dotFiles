@@ -67,7 +67,7 @@ ZSH_THEME="oxide"
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
+# Example format: plugins=(git fzf zsh-interactive-cd)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git fzf zsh-interactive-cd)
 
@@ -89,7 +89,7 @@ MANWIDTH=80
 export MANWIDTH
 
 # Always use english keyboard layout
-setxkbmap us
+#setxkbmap us
 source ~/.bash_aliases
 
 # export MANPATH="/usr/local/man:$MANPATH"

@@ -21,6 +21,13 @@ order += "ethernet _first_"
 order += "battery_level"
 order += "load"
 order += "tztime local"
+order += "timer"
+
+timer {
+    time = 150
+    sound = '/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga'
+    format = 'Tea {timer}'
+}
 
 #volume master{
 		#format = "♪: %volume"

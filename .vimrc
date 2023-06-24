@@ -31,7 +31,7 @@ set undoreload=10000
 set ignorecase
 set smartcase
 set wrap
-set tw=80
+set tw=160
 set cursorline
 hi cursorline cterm=none
 hi cursorlinenr ctermfg=black
@@ -135,6 +135,7 @@ Plugin 'puremourning/vimspector'
 " Call tree
 Plugin 'hari-rangarajan/CCTree'
 Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'rust-lang/rust.vim'
 
 call vundle#end()
 
@@ -203,7 +204,8 @@ let g:ale_set_quickfix = 0
 let b:ale_linters = ['clang', 'clangtidy', 'gcc']
 let b:ale_fixers = ['clangtidy', 'remove_trailing_lines', 'trim_whitespace']
 let g:ale_c_parse_compile_commands = 1
-let g:ale_c_build_dir = '~/felix/iu_appGoodBuild'
+let g:ale_c_build_dir = './project'
+let g:ale_c_gcc_options = '-mmcu=atmega328p'
 
 " Use ALE and also some plugin 'foobar' as completion sources for all code.
 call deoplete#custom#option('sources', {
@@ -311,24 +313,12 @@ inoremap jk <ESC>
 set backspace=indent,eol,start
 
 " Changing the syntax of vimwiki to markdown
-let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
+"let g:vimwiki_list = [{'path': '~/felix/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
 
 " Use latex instead of plain tex
 let g:tex_flavor = 'latex'
 
 nnoremap <C-P> :Files<CR>
-"CTRL-P OPTIONS
-"let g:ctrlp_regexp=1
-"let g:ctrlp_working_path_mode='ra'
-let g:ctrlp_root_markers =['projectrootmarker']
-"let g:ctrlp_use_caching=1
-"let g:ctrlp_clear_cache_on_exit=0
-"let g:ctrlp_lazy_update=500
-"let g:ctrlp_mruf_case_sensitive=0
-"let g:ctrlp_match_window='bottom,order:btt,min:1,max:15,results:50'
-"let g:ctrlp_custom_ignore={'dir': '\v[\/]\.(git|hg|svn)$',
-"\ 'file': '\v\.(exe|bat|boot|eep|elf|clc|ld|so|o|a|map|bak|cfg|ini|dll|chm|hex|swp|zip|rar|db|txt|pdf|doc|docx|pjt|wsp|wsx|xlsm|xls|db\-journal|svn\-base|bmp|jpg|jpeg|png)$',}
-"let g:ctrlp_mruf_include='\.h$\|\.c$|\.make$'
 
 let mapleader = ","
 
