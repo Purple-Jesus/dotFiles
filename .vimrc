@@ -39,8 +39,6 @@ hi cursorlinenr ctermfg=black
 "TAGS
 set tags=tags
 
-" Binary for the fuzzy finder
-set rtp+=~/gitprojects/fzf
 " Close help window just with q
 "autocmd FileType help noremap <buffer> q :q<cr>
 
@@ -55,7 +53,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " Let Vundle manage itself (required)
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.Vim'
 " Nice tool for private wiki
 Plugin 'vimwiki/vimwiki.git'
 
@@ -89,11 +87,10 @@ Plugin 'honza/vim-snippets.git'
 " Syntax checking plugin
 "Plugin 'scrooloose/syntastic.git'
 Plugin 'w0rp/ale'
-Plugin 'Shougo/deoplete.nvim'
 " Search and display information from arbitrary sources like files
 Plugin 'Shougo/unite.vim'
 " Full path fuzzy file finder
-" Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 " Git in vim 
 Plugin 'tpope/vim-fugitive'
 " Branche control
@@ -122,7 +119,6 @@ Plugin 'morhetz/gruvbox'
 Plugin 'jmcantrell/vim-virtualenv'
 " Tag files handling
 Plugin 'ludovicchabant/vim-gutentags'
-Plugin 'skywind3000/gutentags_plus'
 " Vim latex suit
 Plugin 'lervag/vimtex'
 " Fuzzy finder
@@ -162,19 +158,8 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.space = "\ua0"
 
-"let g:airline_theme="murmur"
-let g:airline_theme="gruvbox"
-let g:airline#extensions#branch#displayed_head_limit = 45
-" Disable whitespace checker. In case of messy old files which git history should not be changed
-let b:airline_whitespace_disabled = 1
-" Or shorter error messages
-let g:airline#extensions#whitespace#trailing_format = 't[%s]'
-let g:airline#extensions#whitespace#mixed_indent_format =
- \ 'mi[%s]'
-let g:airline#extensions#whitespace#mixed_indent_file_format =
- \ 'mif[%s]'
-
-let g:gruvbox_contrast_light='hard'
+let g:airline_theme="murmur"
+"let g:airline_theme="gruvbox"
 
 "AUTOCOMPLETION
 "autocmd FileType c set omnifunc=ccomplete#Complete
@@ -275,10 +260,6 @@ map  N <Plug>(easymotion-prev)
 set hlsearch
 let hlstate=1
 
-map  ? :Ag <C-R><C-W><CR>
-omap  ? :Ag <C-R><C-W><CR>
-
-
 "RESIZE SPLITS
 set winheight=5
 set winwidth=10
@@ -290,18 +271,10 @@ nnoremap <silent> <S-H> :vertical res-10<CR>
 nnoremap <silent> <S-L> :vertical res+10<CR>
 
 "NAVIGATE BETWEEN SPLITS
-"nnoremap <C-l> :wincmd l<CR>
-"nnoremap <C-h> :wincmd h<CR>
-"nnoremap <C-k> :wincmd k<CR>
-"nnoremap <C-j> :wincmd j<CR>
-nmap <C-L> <C-W><C-L>
-nmap <C-H> <C-W><C-H>
-nmap <C-K> <C-W><C-K>
-nmap <C-J> <C-W><C-J>
-nnoremap gl <C-W><C-L>
-nnoremap gh <C-W><C-H>
-nnoremap gk <C-W><C-K>
-nnoremap gj <C-W><C-J>
+nnoremap <C-J> :wincmd j<CR>
+nnoremap <C-K> :wincmd k<CR>
+nnoremap <C-L> :wincmd l<CR>
+nnoremap <C-H> :wincmd h<CR>
 
 " Jump tags back with backspace
 nmap <backspace> <C-t>
@@ -324,41 +297,8 @@ let mapleader = ","
 
 let g:signify_disable_by_default = 1
 
-" Rainbow paranteses
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
-
-let g:rbpt_max = 5
-let g:rbpt_loadcmd_toggle = 0
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
-
 nnoremap <Leader>oc :e %<.c<CR>
-nnoremap <Leader>op :e %<.cpp<CR>
 nnoremap <Leader>oh :e %<.h<CR>
-
-" The output of plantuml shifts airline which makes the content of the whole window unreadable
-"augroup ExecOnWrite
-"   autocmd BufWritePost *.uml silent !plantuml <afile>
-"augroup end
 
 map <silent><F1> :UndotreeToggle<CR>
 noremap <silent><F2> :SignifyToggle<CR>
@@ -369,13 +309,3 @@ map <silent><F7> :NERDTreeToggle<CR>
 nmap <silent><F8> :TagbarToggle<CR>
 nnoremap <F9> :set mouse=r<CR>
 nnoremap <F10> :set mouse=a<CR>
-
-let g:termdebugger = "/opt/gcc-arm-none-eabi-6-2017-q1-update/bin/arm-none-eabi-gdb-py"
-let g:termdebug_wide = 163
-nnoremap <silent> <leader>b :Break<CR>
-nnoremap <silent> <leader>bc :Clear<CR>
-nnoremap <silent> <leader>c :Continue<CR>
-nnoremap <silent> <leader>n :Over<CR>
-nnoremap <silent> <leader>s :Step<CR>
-nnoremap <silent> <leader>e :Eval<CR>
-nnoremap <silent> <leader>f :Finish<CR>

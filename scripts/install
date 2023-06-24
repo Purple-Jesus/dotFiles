@@ -27,22 +27,13 @@ function archInstalBase {
 		sudo pacman -Syu
 
 		# Install basics
-		sudo pacman -S sakura tmux git firefox evolution i3 i3lock pcmanfm gsimplecal
+		sudo pacman -S sakura tmux git firefox evolution i3 i3lock pcmanfm
 
 		# Install multimedia
 		sudo pacman -S vlc audacious vorbit-tools youtube-dl
 
 		# Install python 
 		sudo pacman -S python python2 ipython python-cherrypy python-mathplotlib python-pip python2-pip
-
-		# Create folders if doesn't exists
-		if ![[ -d ~/Documents/prog/fromOthers ]]; then
-			mkdir -p ~/Documents/prog/fromOthers
-		fi
-
-		if ![[ -d ~/.local/bin ]]; then
-			mkdir -p ~/.local/bin
-		fi
 
 		# Get config files and create symbolic links
 		git clone https://github.com/MisterHyde/Files
@@ -56,7 +47,7 @@ function archInstalBase {
 		done
 
 		# Install aurs 
-		cd ~/Documents/prog/fromOthers/
+		cd ~/aurs
 
 		git clone https://github.com/huyng/bashmarks 
 		cd bashmarks
